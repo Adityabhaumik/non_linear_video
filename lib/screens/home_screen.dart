@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Adya.Care"),
+        title: const Text("Non - Linear"),
       ),
       body: Center(
         child: Container(

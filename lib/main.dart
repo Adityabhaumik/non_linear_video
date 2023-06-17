@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Adya.Care',
+          title: 'Non - Linear',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
             useMaterial3: true,
