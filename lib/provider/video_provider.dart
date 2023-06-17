@@ -12,10 +12,10 @@ class VideoProvider extends ChangeNotifier {
   late GraphNode<int> root;
   late ChewieController chewieController;
   late VideoPlayerController videoPlayerController;
-  ButtonDisplayOptions showOptions = ButtonDisplayOptions.dontShow;
-  Map<int, String> vidId = videosLinks;
-  Map<int, String> options = optionsLabels;
-  String videoUrl = baseUrl;
+  late ButtonDisplayOptions showOptions;
+  late Map<int, String> vidId;
+  late Map<int, String> options;
+  late String videoUrl;
 
   void checkVideo(ButtonDisplayOptions last) {
     if (videoPlayerController.value.position ==
@@ -30,6 +30,10 @@ class VideoProvider extends ChangeNotifier {
   }
 
   void initialize() {
+    showOptions = ButtonDisplayOptions.dontShow;
+    vidId = videosLinks;
+    options = optionsLabels;
+    videoUrl = baseUrl;
     List<List<int>> graph = decisionTree;
     root = GraphNode<int>(0);
     createGraph(root, graph);
@@ -91,10 +95,10 @@ class VideoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void visitAllNodes(GraphNode<int> node) {
-  //   //print(node.value);
-  //   for (var child in node.children) {
-  //     visitAllNodes(child);
-  //   }
-  // }
+// void visitAllNodes(GraphNode<int> node) {
+//   //print(node.value);
+//   for (var child in node.children) {
+//     visitAllNodes(child);
+//   }
+// }
 }
