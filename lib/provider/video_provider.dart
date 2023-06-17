@@ -15,7 +15,7 @@ class VideoProvider extends ChangeNotifier {
   late String videoUrl;
   late List<List<int>> graph;
 
-  void checkVideo(ButtonDisplayOptions last) {
+  void checkVideoStatus(ButtonDisplayOptions last) {
     if (videoPlayerController.value.position ==
         videoPlayerController.value.duration) {
       if (last == ButtonDisplayOptions.end) {
@@ -44,9 +44,9 @@ class VideoProvider extends ChangeNotifier {
         showOptions: false);
     videoPlayerController.addListener(() {
       if (graph[root].isNotEmpty) {
-        checkVideo(ButtonDisplayOptions.show);
+        checkVideoStatus(ButtonDisplayOptions.show);
       } else {
-        checkVideo(ButtonDisplayOptions.end);
+        checkVideoStatus(ButtonDisplayOptions.end);
       }
     });
   }
@@ -66,9 +66,9 @@ class VideoProvider extends ChangeNotifier {
         showOptions: false);
     videoPlayerController.addListener(() {
       if (graph[root].isNotEmpty) {
-        checkVideo(ButtonDisplayOptions.show);
+        checkVideoStatus(ButtonDisplayOptions.show);
       } else {
-        checkVideo(ButtonDisplayOptions.end);
+        checkVideoStatus(ButtonDisplayOptions.end);
       }
     });
     if (graph[root].isNotEmpty) {
