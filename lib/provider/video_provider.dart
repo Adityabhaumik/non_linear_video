@@ -1,21 +1,19 @@
-import 'dart:collection';
-
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:non_linear/constants.dart';
-import 'package:non_linear/models/graph_model.dart';
 import 'package:video_player/video_player.dart';
 
 enum ButtonDisplayOptions { show, dontShow, end }
 
 class VideoProvider extends ChangeNotifier {
-  late GraphNode<int> root;
+  late int root;
   late ChewieController chewieController;
   late VideoPlayerController videoPlayerController;
   late ButtonDisplayOptions showOptions;
   late Map<int, String> vidId;
   late Map<int, String> options;
   late String videoUrl;
+  late List<List<int>> graph;
 
   void checkVideo(ButtonDisplayOptions last) {
     if (videoPlayerController.value.position ==
@@ -34,9 +32,8 @@ class VideoProvider extends ChangeNotifier {
     vidId = videosLinks;
     options = optionsLabels;
     videoUrl = baseUrl;
-    List<List<int>> graph = decisionTree;
-    root = GraphNode<int>(0);
-    createGraph(root, graph);
+    graph = decisionTree;
+    root = 0;
     videoPlayerController = VideoPlayerController.network(videoUrl);
     chewieController = ChewieController(
         aspectRatio: 0.5,
@@ -46,7 +43,7 @@ class VideoProvider extends ChangeNotifier {
         showControls: false,
         showOptions: false);
     videoPlayerController.addListener(() {
-      if (root.children.isNotEmpty) {
+      if (graph[root].isNotEmpty) {
         checkVideo(ButtonDisplayOptions.show);
       } else {
         checkVideo(ButtonDisplayOptions.end);
@@ -54,24 +51,9 @@ class VideoProvider extends ChangeNotifier {
     });
   }
 
-  void createGraph(GraphNode<int> root, List<List<int>> adjList) {
-    Queue<GraphNode<int>> queue = Queue();
-    queue.add(root);
-    while (queue.isNotEmpty) {
-      GraphNode front = queue.first;
-      queue.removeFirst();
-      int node = front.value;
-      for (int childNode in adjList[node]) {
-        GraphNode<int> child = GraphNode(childNode);
-        front.children.add(child);
-        queue.add(child);
-      }
-    }
-  }
-
-  void changeRootToSelectedOption(GraphNode<int> selected) {
+  void changeRootToSelectedOption(int selected) {
     root = selected;
-    videoUrl = vidId[root.value]!;
+    videoUrl = vidId[root]!;
     videoPlayerController.dispose();
     chewieController.dispose();
     videoPlayerController = VideoPlayerController.network(videoUrl);
@@ -83,22 +65,15 @@ class VideoProvider extends ChangeNotifier {
         showControls: false,
         showOptions: false);
     videoPlayerController.addListener(() {
-      if (root.children.isNotEmpty) {
+      if (graph[root].isNotEmpty) {
         checkVideo(ButtonDisplayOptions.show);
       } else {
         checkVideo(ButtonDisplayOptions.end);
       }
     });
-    if (root.children.isNotEmpty) {
+    if (graph[root].isNotEmpty) {
       showOptions = ButtonDisplayOptions.dontShow;
     }
     notifyListeners();
   }
-
-// void visitAllNodes(GraphNode<int> node) {
-//   //print(node.value);
-//   for (var child in node.children) {
-//     visitAllNodes(child);
-//   }
-// }
 }

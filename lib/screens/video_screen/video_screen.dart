@@ -19,53 +19,56 @@ class VideoPlaybackScreenState extends State<VideoPlaybackScreen> {
     final screenSize = MediaQuery.of(context).size;
     VideoProvider videoProvider =
         Provider.of<VideoProvider>(context, listen: true);
-    return Builder(
-      builder: (context) {
-        return Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            height: screenSize.height,
-            width: screenSize.width,
-            child: Stack(
-              children: [
-                VideoPlayerWidget(
-                  videoUrl: videoProvider.videoUrl,
-                  chewieController: videoProvider.chewieController,
-                  videoPlayerController: videoProvider.videoPlayerController,
+    return WillPopScope(
+      onWillPop: () async {
+        videoProvider.videoPlayerController.dispose();
+        videoProvider.chewieController.dispose();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          height: screenSize.height,
+          width: screenSize.width,
+          child: Stack(
+            children: [
+              VideoPlayerWidget(
+                videoUrl: videoProvider.videoUrl,
+                chewieController: videoProvider.chewieController,
+                videoPlayerController: videoProvider.videoPlayerController,
+              ),
+              if (videoProvider.showOptions == ButtonDisplayOptions.show)
+                Center(
+                  child: SizedBox(
+                      height: screenSize.height * 0.2,
+                      width: screenSize.width,
+                      child: buildOptionsCollumn(
+                          context, videoProvider.graph[videoProvider.root])),
                 ),
-                if (videoProvider.showOptions == ButtonDisplayOptions.show)
-                  Center(
-                    child: SizedBox(
-                        height: screenSize.height * 0.2,
-                        width: screenSize.width,
-                        child: buildOptionsCollumn(
-                            context, videoProvider.root.children)),
-                  ),
-                if (videoProvider.showOptions == ButtonDisplayOptions.end)
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      constraints:
-                          const BoxConstraints(minWidth: 100, minHeight: 40),
-                      color: Colors.white,
-                      margin: const EdgeInsets.all(2.0),
-                      padding: const EdgeInsets.all(2.0),
-                      child: const Center(
-                        child: Text(
-                          "END",
-                          style: TextStyle(color: Colors.black),
-                        ),
+              if (videoProvider.showOptions == ButtonDisplayOptions.end)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    constraints:
+                        const BoxConstraints(minWidth: 100, minHeight: 40),
+                    color: Colors.white,
+                    margin: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(2.0),
+                    child: const Center(
+                      child: Text(
+                        "END",
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

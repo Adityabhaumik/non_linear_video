@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:non_linear/models/graph_model.dart';
 import 'package:non_linear/provider/video_provider.dart';
 import 'package:provider/provider.dart';
 
-Widget buildOptionsCollumn(BuildContext context, List<GraphNode<int>> options) {
+Widget buildOptionsCollumn(BuildContext context, List<int> options) {
   VideoProvider appBaseProvider =
       Provider.of<VideoProvider>(context, listen: true);
   final screenSize = MediaQuery.of(context).size;
   List<Widget> buttonWidgets = [];
-  for (GraphNode<int> node in options) {
+  for (int node in options) {
     buttonWidgets.add(
       GestureDetector(
         onTap: () {
@@ -21,7 +20,7 @@ Widget buildOptionsCollumn(BuildContext context, List<GraphNode<int>> options) {
           padding: const EdgeInsets.all(2.0),
           child: Center(
             child: Text(
-              "${appBaseProvider.options[node.value]}",
+              "${appBaseProvider.options[node]}",
               style: const TextStyle(color: Colors.black),
             ),
           ),
