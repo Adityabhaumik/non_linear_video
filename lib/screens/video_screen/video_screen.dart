@@ -26,9 +26,9 @@ class VideoPlaybackScreenState extends State<VideoPlaybackScreen> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         body: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.only(top: 10),
           height: screenSize.height,
           width: screenSize.width,
           child: Stack(
@@ -41,7 +41,7 @@ class VideoPlaybackScreenState extends State<VideoPlaybackScreen> {
               if (videoProvider.showOptions == ButtonDisplayOptions.show)
                 Center(
                   child: SizedBox(
-                      height: screenSize.height * 0.2,
+                      height: screenSize.height * 0.25,
                       width: screenSize.width,
                       child: buildOptionsCollumn(
                           context, videoProvider.graph[videoProvider.root])),

@@ -14,8 +14,9 @@ class VideoProvider extends ChangeNotifier {
   late Map<int, String> options;
   late String videoUrl;
   late List<List<int>> graph;
+  late List<int> path;
 
-  void checkVideoStatus(ButtonDisplayOptions last) {
+  void _checkVideoStatus(ButtonDisplayOptions last) {
     if (videoPlayerController.value.position ==
         videoPlayerController.value.duration) {
       if (last == ButtonDisplayOptions.end) {
@@ -34,46 +35,68 @@ class VideoProvider extends ChangeNotifier {
     videoUrl = baseUrl;
     graph = decisionTree;
     root = 0;
+    path = [root];
     videoPlayerController = VideoPlayerController.network(videoUrl);
     chewieController = ChewieController(
-        aspectRatio: 0.5,
-        videoPlayerController: videoPlayerController,
-        autoPlay: true,
-        looping: false,
-        showControls: false,
-        showOptions: false);
+      aspectRatio: 0.5,
+      videoPlayerController: videoPlayerController,
+      autoPlay: true,
+      looping: false,
+      allowFullScreen: false,
+      showControls: true,
+      draggableProgressBar: true,
+      showControlsOnInitialize: false,
+      materialProgressColors: ChewieProgressColors(
+        playedColor: Colors.redAccent,
+        backgroundColor: Colors.white60,
+        bufferedColor: Colors.grey,
+      ),
+      placeholder: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
     videoPlayerController.addListener(() {
       if (graph[root].isNotEmpty) {
-        checkVideoStatus(ButtonDisplayOptions.show);
+        _checkVideoStatus(ButtonDisplayOptions.show);
       } else {
-        checkVideoStatus(ButtonDisplayOptions.end);
+        _checkVideoStatus(ButtonDisplayOptions.end);
       }
     });
   }
 
   void changeRootToSelectedOption(int selected) {
-    root = selected;
-    videoUrl = vidId[root]!;
     videoPlayerController.dispose();
     chewieController.dispose();
+    root = selected;
+    path.add(root);
+    videoUrl = vidId[root]!;
     videoPlayerController = VideoPlayerController.network(videoUrl);
     chewieController = ChewieController(
         aspectRatio: 0.5,
         videoPlayerController: videoPlayerController,
         autoPlay: true,
         looping: false,
-        showControls: false,
-        showOptions: false);
+        allowFullScreen: false,
+        showControls: true,
+        draggableProgressBar: true,
+        showControlsOnInitialize: false,
+        materialProgressColors: ChewieProgressColors(
+          playedColor: Colors.redAccent,
+          backgroundColor: Colors.white60,
+          bufferedColor: Colors.grey,
+        ),
+        placeholder: const Center(
+          child: CircularProgressIndicator(),
+        ));
     videoPlayerController.addListener(() {
       if (graph[root].isNotEmpty) {
-        checkVideoStatus(ButtonDisplayOptions.show);
+        _checkVideoStatus(ButtonDisplayOptions.show);
       } else {
-        checkVideoStatus(ButtonDisplayOptions.end);
+        _checkVideoStatus(ButtonDisplayOptions.end);
       }
     });
-    if (graph[root].isNotEmpty) {
-      showOptions = ButtonDisplayOptions.dontShow;
-    }
+    showOptions = ButtonDisplayOptions.dontShow;
+
     notifyListeners();
   }
 }

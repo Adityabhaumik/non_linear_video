@@ -22,11 +22,9 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    return SizedBox(
-      height: screenSize.height,
+    return SafeArea(
       child: Chewie(
-        controller: widget.chewieController,
+          controller: widget.chewieController,
       ),
     );
   }
